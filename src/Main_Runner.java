@@ -11,14 +11,14 @@ public class Main_Runner {
         System.out.println("Running...");
 
         Map<String, String> temp = new HashMap<>();
-        temp.put("1", "a");
+        temp.put("8", "h");
         temp.put("2", "b");
-        temp.put("3", "c");
         temp.put("4", "d");
         temp.put("5", "e");
+        temp.put("1", "a");
         temp.put("6", "f");
         temp.put("7", "g");
-        temp.put("8", "h");
+        temp.put("3", "c");
         temp.put("9", "i");
 
         Television tv = new Television(temp);
