@@ -35,14 +35,20 @@ import java.util.Map;
          *       Do not make any other assumptions about channelNumberToNameMap or the data it contains.
          */
         public Television(Map<String, String> channelNumberToNameMap) {
-            if(channelCollection == null && channelNumberToNameMap != null) { //channelNumberToNameMap will not be empty
+            //channelNumberToNameMap will not be empty
+            //if channel collection and channelNumberToNameMap passed is in not null
+            if(channelCollection == null && channelNumberToNameMap != null) {
+                //create new HashMap from Map passed in
                 channelCollection = new HashMap<>(channelNumberToNameMap);
+                //set default channel to 1
                 currentChannel = 1;
+                //let user know which channel TV is going to begin with
                 System.out.print("Beginning with ");
                 printCurrentChannel();
             } else {
                 //do nothing
                 //channelCollection has already been created
+                //assumption -> The channels and numbers cannot be changed once created
             }
         }
 
@@ -54,12 +60,15 @@ import java.util.Map;
         The name of the desired channel
          */
         public String goToChannel(String channelNumber) {
-            //keys will all be numeric and positive
+            //check to make sure the channelNumber is a valid number to lookup
             if(!isValidChannel (channelNumber)) {
+                //if channel number is invalid let user know
                 return "ERROR channel number is invalid.";
             } else if (channelCollection == null) {
+                //if trying to access channels that do not exist let user know
                 return "ERROR channels have not been established yet.";
             } else {
+                //the channelNumber is valid and can be looked-up
                 currentChannel = Integer.parseInt(channelNumber);
                 return channelCollection.get(String.valueOf(currentChannel));
             }
@@ -73,13 +82,19 @@ import java.util.Map;
          */
         public String channelUp() {
             if (channelCollection != null){
+                //if we add one to the current channel is it valid?
                 if(isValidChannel(String.valueOf(currentChannel + 1))){
+                    //the channelNumber is valid and can be looked-up
+                    //add one to currentChannel and lookup
                     return channelCollection.get(String.valueOf(++currentChannel));
                 } else {
+                    //if we add one to the current channel it will go over the limit
+                    //set currentChannel to the beginning of the list
                     currentChannel = 1;
                     return  channelCollection.get(String.valueOf(currentChannel));
                 }
             } else {
+                //if trying to access channels that do not exist let user know
                 return "ERROR channels have not been established yet.";
             }
         }
@@ -93,9 +108,14 @@ import java.util.Map;
          */
         public String channelDown() {
             if (channelCollection != null) {
+                //if we subtract one from the current channel is it valid?
                 if (isValidChannel(String.valueOf(currentChannel - 1))) {
+                    //the channelNumber is valid and can be looked up
+                    //subtract one from it and lookup
                     return channelCollection.get(String.valueOf(--currentChannel));
                 } else {
+                    //if we subtract one from the current channel it will go below the range of channels
+                    //set currentChannel to the end of the list
                     currentChannel = channelCollection.size();
                     return channelCollection.get(String.valueOf(currentChannel));
                 }
@@ -104,7 +124,12 @@ import java.util.Map;
             }
         }
 
-
+        /**
+         * Checks if a string is within the range of TV channels.
+         *
+         * @return
+        true if positive integer and within the range of TV channels, return false otherwise
+         */
         private boolean isValidChannel(String s){
             if(s != null && !s.isEmpty() && isPositiveNumber(s)
                     && Integer.parseInt(s) <= channelCollection.size()){
@@ -118,7 +143,7 @@ import java.util.Map;
          * Checks if a string is a positive number.
          *
          * @return
-        The name of the previous channel
+        true if positive integer, return false otherwise
          */
         private boolean isPositiveNumber(String s) {
             if (s != null && s.matches("[-+]?\\d*\\.?\\d+") && Integer.parseInt(s) > 0) {
