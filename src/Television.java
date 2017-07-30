@@ -2,6 +2,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ *  @author Bryce Hairabedian
+ *  @date July 30th, 2017
+ *
+ */
+
+/**
  * Goal: Implement the constructor and methods below.
  *
  * Guidelines:
