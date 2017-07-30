@@ -45,10 +45,14 @@ public class Main_Runner {
         System.out.println("channel up= " + tv.channelUp());
         System.out.println("channel up= " + tv.channelUp());
         System.out.println("channel up= " + tv.channelUp());
-        System.out.println("go to channel 2 "+tv.goToChannel("22"));
+        System.out.println("go to channel 10 "+tv.goToChannel("10"));
+        System.out.println("go to channel 1 "+tv.goToChannel("1"));
+        System.out.println("go to channel 0 "+tv.goToChannel("0"));
         System.out.println("go to channel e "+tv.goToChannel("e"));
         System.out.println("channel up= " + tv.channelUp());
         System.out.println("channel down= " + tv.channelDown());
+        System.out.println("channel down= " + tv.channelDown());
+        System.out.println("channel up= " + tv.channelUp());
     }
 
 }
