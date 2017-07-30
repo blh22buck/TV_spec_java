@@ -9,13 +9,18 @@ import java.util.Map;
  *    desired language. Please use actual code (no pseudocode).
  * 2. Feel free to add any additional private member methods/variables/classes.
  * 3. Please capture any assumptions that you make about the program.
- * -> The channels and numbers cannot be changed once created
+ *      Assumption -> The channels and numbers cannot be changed once created
  *
  * 4. We want to see your best work - style, problem solving, etc. Your solution should handle every edge case you can
  *    think of.
  *
  * Question:
- * Is your solution optimal? If so, why?
+ * Is your solution optimal? If so, why? Yes,
+ *      -> My solution checks for all edge cases. Below zero, out of range, or a non numeric value.
+ *      The HashMap provides average case of O(1) lookups with all .get() and .put()'s.
+ *      It also keeps track internally what channel is currently being tuned in with currentChannel.
+ *      The Channel number is validated for range and numeric value before being looked-up.
+ *      Errors are unique to let user know what went wrong.
  */
 
     /**
@@ -153,6 +158,9 @@ import java.util.Map;
             }
         }
 
+        /**
+         * Prints the current channel name to the console.
+         */
         public void printCurrentChannel(){
             if(channelCollection != null){
                 System.out.println("Channel: "+channelCollection.get(String.valueOf(currentChannel)));
