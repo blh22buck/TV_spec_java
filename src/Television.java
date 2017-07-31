@@ -15,7 +15,6 @@ import java.util.*;
  * 2. Feel free to add any additional private member methods/variables/classes.
  * 3. Please capture any assumptions that you make about the program.
  *      Assumption -> The channels and numbers cannot be changed once created
- *      Assumption -> Channels will be consecutive
  *
  * 4. We want to see your best work - style, problem solving, etc. Your solution should handle every edge case you can
  *    think of.
@@ -34,8 +33,10 @@ import java.util.*;
      */
     public class Television {
         private LinkedHashMap<String, String> channelCollection;
-        private Integer currentChannel;
         private String keyCurrentChannel;
+        private int currentChannel;
+        private int largetsValue;
+        private int smallestValue;
 
         /**
          * Constructor
@@ -52,6 +53,10 @@ import java.util.*;
             if(channelCollection == null && channelNumberToNameMap != null) {
                 //create new HashMap from Map passed in
                 channelCollection = new LinkedHashMap<>(channelNumberToNameMap);
+                setLargestValueForChannel();
+                setSmallestValueForChannel();
+                currentChannel = smallestValue;
+
                 keyCurrentChannel = ((channelCollection.entrySet().iterator().next()).getKey());
                 //let user know which channel TV is going to begin with
                 System.out.print("Beginning with ");
@@ -73,7 +78,7 @@ import java.util.*;
         public String goToChannel(String channelNumber) {
             //check to make sure the channelNumber is a valid number to lookup
             if(channelCollection.containsKey(channelNumber)){
-                keyCurrentChannel = channelNumber;
+                currentChannel = Integer.parseInt(channelNumber);
                 return channelCollection.get(channelNumber);
             } else {
                 return "ERROR: This channel number is invalid";
@@ -88,27 +93,45 @@ import java.util.*;
          */
         public String channelUp() {
             if (channelCollection != null){
-                Iterator i = channelCollection.entrySet().iterator();
-                while (i.hasNext()) {
-                    Map.Entry entry = (Map.Entry) i.next();
-                    if(entry.getKey().equals(keyCurrentChannel)){
-                        if(i.hasNext()){ //we're at our current channel must get the next channel
-                            keyCurrentChannel = (String) ((Map.Entry) i.next()).getKey();
-                            return channelCollection.get(keyCurrentChannel);
-                        } else { //there is no next must start from the beginning
-                            keyCurrentChannel = ((channelCollection.entrySet().iterator().next()).getKey());
-                            return channelCollection.get(keyCurrentChannel);
+                if(currentChannel < largetsValue){
+                    for(int i=currentChannel+1; i<=largetsValue; i++){
+                        if(channelCollection.containsKey(String.valueOf(i))){
+                            currentChannel = i;
+                            return channelCollection.get(String.valueOf(currentChannel));
                         }
                     }
+                } else { //current channel is the largest value
+                    //revert back to beginning of channels list
+                    currentChannel = smallestValue;
+                    return channelCollection.get(String.valueOf(currentChannel));
                 }
-                return "ERROR cannot go up a channel";
             } else {
                 //if trying to access channels that do not exist let user know
                 return "ERROR channels have not been established yet.";
             }
         }
-
-
+        private void setSmallestValueForChannel(){
+            Iterator i = channelCollection.entrySet().iterator();
+            int smallest = 0; int compareTo = 0;
+            while (i.hasNext()){
+                compareTo = Integer.parseInt((String) ((Map.Entry) i.next()).getKey());
+                if(compareTo < smallest){
+                    smallest = compareTo;
+                }
+            }
+            smallestValue = smallest;
+        }
+        private void setLargestValueForChannel(){
+            Iterator i = channelCollection.entrySet().iterator();
+            int largest = 0; int compareTo = 0;
+            while (i.hasNext()){
+                compareTo = Integer.parseInt((String) ((Map.Entry) i.next()).getKey());
+                if(compareTo > largest){
+                    largest = compareTo;
+                }
+            }
+            largetsValue = largest;
+        }
         /**
          * Changes the Television channel once in a descending direction.
          *
@@ -117,6 +140,9 @@ import java.util.*;
          */
         public String channelDown() {
             if (channelCollection != null){
+                int current = Integer.parseInt(keyCurrentChannel);
+
+
                 List<Map.Entry<String,String>> channelList = new ArrayList<>(channelCollection.entrySet());
 
                 for( int i = channelList.size() -1; i >= 0 ; i --){
@@ -138,34 +164,6 @@ import java.util.*;
             }
         }
 
-        /**
-         * Checks if a string is within the range of TV channels.
-         *
-         * @return
-        true if positive integer and within the range of TV channels, return false otherwise
-         */
-        private boolean isValidChannel(String s){
-            if(s != null && !s.isEmpty() && isPositiveNumber(s)
-                    && Integer.parseInt(s) <= channelCollection.size()){
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        /**
-         * Checks if a string is a positive number.
-         *
-         * @return
-        true if positive integer, return false otherwise
-         */
-        private boolean isPositiveNumber(String s) {
-            if (s != null && s.matches("[-+]?\\d*\\.?\\d+") && Integer.parseInt(s) > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
 
         /**
          * Prints the current channel name to the console.
