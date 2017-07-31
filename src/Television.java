@@ -52,11 +52,10 @@ import java.util.Map;
             if(channelCollection == null && channelNumberToNameMap != null) {
                 //create new HashMap from Map passed in
                 channelCollection = new HashMap<>(channelNumberToNameMap);
-                //set default channel to 1
-                currentChannel = 1;
+                currentChannel = Integer.parseInt((channelCollection.entrySet().iterator().next()).getKey());
                 //let user know which channel TV is going to begin with
-                //System.out.print("Beginning with ");
-                //printCurrentChannel();
+                System.out.print("Beginning with ");
+                printCurrentChannel();
             } else {
                 //do nothing
                 //channelCollection has already been created
@@ -102,7 +101,7 @@ import java.util.Map;
                 } else {
                     //if we add one to the current channel it will go over the limit
                     //set currentChannel to the beginning of the list
-                    currentChannel = 1;
+                    currentChannel = Integer.parseInt((channelCollection.entrySet().iterator().next()).getKey());
                     return  channelCollection.get(String.valueOf(currentChannel));
                 }
             } else {
