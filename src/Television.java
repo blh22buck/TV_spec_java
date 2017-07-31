@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  @author Bryce Hairabedian
@@ -16,14 +15,13 @@ import java.util.Map;
  * 2. Feel free to add any additional private member methods/variables/classes.
  * 3. Please capture any assumptions that you make about the program.
  *      Assumption -> The channels and numbers cannot be changed once created
- *      Assumption -> Channels will be consecutive
  *
  * 4. We want to see your best work - style, problem solving, etc. Your solution should handle every edge case you can
  *    think of.
  *
  * Question:
  * Is your solution optimal? If so, why? Yes,
- *      -> My solution checks for all edge cases. Below zero, out of range, or a non numeric value.
+ *      -> My solution checks for all edge cases.
  *      The HashMap provides average case of O(1) lookups with all .get() and .put()'s.
  *      It also keeps track internally what channel is currently being tuned in with currentChannel.
  *      The Channel number is validated for range and numeric value before being looked-up.
@@ -34,8 +32,10 @@ import java.util.Map;
      * Class to Model a Television.
      */
     public class Television {
-        private Map<String, String> channelCollection;
-        private Integer currentChannel;
+        private HashMap<String, String> channelCollection; //collection of each channel with key, value pair
+        private int currentChannel; //the current channel being tuned in
+        private int largestValue; //the largest value in the channel set
+        private int smallestValue; //the smallest value in the channel set
 
         /**
          * Constructor
@@ -52,10 +52,11 @@ import java.util.Map;
             if(channelCollection == null && channelNumberToNameMap != null) {
                 //create new HashMap from Map passed in
                 channelCollection = new HashMap<>(channelNumberToNameMap);
-                currentChannel = Integer.parseInt((channelCollection.entrySet().iterator().next()).getKey());
-                //let user know which channel TV is going to begin with
-                System.out.print("Beginning with ");
-                printCurrentChannel();
+                setLargestValueForChannel();
+                setSmallestValueForChannel();
+                currentChannel = smallestValue;
+                // uncomment below if you'd like to let user know which channel TV is going to begin with
+                //System.out.print("Beginning with ");printCurrentChannel();
             } else {
                 //do nothing
                 //channelCollection has already been created
@@ -72,16 +73,11 @@ import java.util.Map;
          */
         public String goToChannel(String channelNumber) {
             //check to make sure the channelNumber is a valid number to lookup
-            if(!isValidChannel (channelNumber)) {
-                //if channel number is invalid let user know
-                return "ERROR channel number is invalid.";
-            } else if (channelCollection == null) {
-                //if trying to access channels that do not exist let user know
-                return "ERROR channels have not been established yet.";
-            } else {
-                //the channelNumber is valid and can be looked-up
+            if(channelCollection.containsKey(channelNumber)){
                 currentChannel = Integer.parseInt(channelNumber);
-                return channelCollection.get(String.valueOf(currentChannel));
+                return channelCollection.get(channelNumber);
+            } else {
+                return "ERROR: This channel number is invalid";
             }
         }
 
@@ -93,16 +89,18 @@ import java.util.Map;
          */
         public String channelUp() {
             if (channelCollection != null){
-                //if we add one to the current channel is it valid?
-                if(isValidChannel(String.valueOf(currentChannel + 1))){
-                    //the channelNumber is valid and can be looked-up
-                    //add one to currentChannel and lookup
-                    return channelCollection.get(String.valueOf(++currentChannel));
-                } else {
-                    //if we add one to the current channel it will go over the limit
-                    //set currentChannel to the beginning of the list
-                    currentChannel = Integer.parseInt((channelCollection.entrySet().iterator().next()).getKey());
-                    return  channelCollection.get(String.valueOf(currentChannel));
+                if(currentChannel < largestValue){
+                    for(int i = currentChannel+1; i<= largestValue; i++){
+                        if(channelCollection.containsKey(String.valueOf(i))){
+                            currentChannel = i;
+                            return channelCollection.get(String.valueOf(currentChannel));
+                        }
+                    }
+                    return "ERROR Couldn't find channel";
+                } else { //current channel is the largest value
+                    //revert back to beginning of channels list
+                    currentChannel = smallestValue;
+                    return channelCollection.get(String.valueOf(currentChannel));
                 }
             } else {
                 //if trying to access channels that do not exist let user know
@@ -118,50 +116,54 @@ import java.util.Map;
         The name of the previous channel
          */
         public String channelDown() {
-            if (channelCollection != null) {
-                //if we subtract one from the current channel is it valid?
-                if (isValidChannel(String.valueOf(currentChannel - 1))) {
-                    //the channelNumber is valid and can be looked up
-                    //subtract one from it and lookup
-                    return channelCollection.get(String.valueOf(--currentChannel));
-                } else {
-                    //if we subtract one from the current channel it will go below the range of channels
-                    //set currentChannel to the end of the list
-                    currentChannel = channelCollection.size();
+            if (channelCollection != null){
+                if(currentChannel > smallestValue){
+                    for(int i=currentChannel - 1; i>=smallestValue; i--){
+                        if(channelCollection.containsKey(String.valueOf(i))){
+                            currentChannel = i;
+                            return channelCollection.get(String.valueOf(currentChannel));
+                        }
+                    }
+                    return "Couldn't find channel";
+                } else { //current channel is the smallest value
+                    //revert to end of channels list
+                    currentChannel = largestValue;
                     return channelCollection.get(String.valueOf(currentChannel));
                 }
             } else {
+                //if trying to access channels that do not exist let user know
                 return "ERROR channels have not been established yet.";
             }
         }
 
         /**
-         * Checks if a string is within the range of TV channels.
-         *
-         * @return
-        true if positive integer and within the range of TV channels, return false otherwise
+         * Sets the smallest value for a TV channel.
          */
-        private boolean isValidChannel(String s){
-            if(s != null && !s.isEmpty() && isPositiveNumber(s)
-                    && Integer.parseInt(s) <= channelCollection.size()){
-                return true;
-            } else {
-                return false;
+        private void setSmallestValueForChannel(){
+            Iterator i = channelCollection.entrySet().iterator();
+            int smallest = Integer.MAX_VALUE; int compareTo = 0;
+            while (i.hasNext()){
+                compareTo = Integer.parseInt((String) ((Map.Entry) i.next()).getKey());
+                if(compareTo < smallest){
+                    smallest = compareTo;
+                }
             }
+            smallestValue = smallest;
         }
 
         /**
-         * Checks if a string is a positive number.
-         *
-         * @return
-        true if positive integer, return false otherwise
+         * Sets the largest value for a TV channel.
          */
-        private boolean isPositiveNumber(String s) {
-            if (s != null && s.matches("[-+]?\\d*\\.?\\d+") && Integer.parseInt(s) > 0) {
-                return true;
-            } else {
-                return false;
+        private void setLargestValueForChannel(){
+            Iterator i = channelCollection.entrySet().iterator();
+            int largest = 0; int compareTo = 0;
+            while (i.hasNext()){
+                compareTo = Integer.parseInt((String) ((Map.Entry) i.next()).getKey());
+                if(compareTo > largest){
+                    largest = compareTo;
+                }
             }
+            largestValue = largest;
         }
 
         /**
