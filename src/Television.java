@@ -1,4 +1,5 @@
-import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -34,8 +35,9 @@ import java.util.Map;
      * Class to Model a Television.
      */
     public class Television {
-        private Map<String, String> channelCollection;
+        private LinkedHashMap<String, String> channelCollection;
         private Integer currentChannel;
+        private String keyCurrentChannel;
 
         /**
          * Constructor
@@ -51,8 +53,8 @@ import java.util.Map;
             //if channel collection and channelNumberToNameMap passed is in not null
             if(channelCollection == null && channelNumberToNameMap != null) {
                 //create new HashMap from Map passed in
-                channelCollection = new HashMap<>(channelNumberToNameMap);
-                currentChannel = Integer.parseInt((channelCollection.entrySet().iterator().next()).getKey());
+                channelCollection = new LinkedHashMap<>(channelNumberToNameMap);
+                keyCurrentChannel = ((channelCollection.entrySet().iterator().next()).getKey());
                 //let user know which channel TV is going to begin with
                 System.out.print("Beginning with ");
                 printCurrentChannel();
@@ -72,16 +74,11 @@ import java.util.Map;
          */
         public String goToChannel(String channelNumber) {
             //check to make sure the channelNumber is a valid number to lookup
-            if(!isValidChannel (channelNumber)) {
-                //if channel number is invalid let user know
-                return "ERROR channel number is invalid.";
-            } else if (channelCollection == null) {
-                //if trying to access channels that do not exist let user know
-                return "ERROR channels have not been established yet.";
+            if(channelCollection.containsKey(channelNumber)){
+                keyCurrentChannel = channelNumber;
+                return channelCollection.get(channelNumber);
             } else {
-                //the channelNumber is valid and can be looked-up
-                currentChannel = Integer.parseInt(channelNumber);
-                return channelCollection.get(String.valueOf(currentChannel));
+                return "ERROR: This channel number is invalid";
             }
         }
 
@@ -93,17 +90,20 @@ import java.util.Map;
          */
         public String channelUp() {
             if (channelCollection != null){
-                //if we add one to the current channel is it valid?
-                if(isValidChannel(String.valueOf(currentChannel + 1))){
-                    //the channelNumber is valid and can be looked-up
-                    //add one to currentChannel and lookup
-                    return channelCollection.get(String.valueOf(++currentChannel));
-                } else {
-                    //if we add one to the current channel it will go over the limit
-                    //set currentChannel to the beginning of the list
-                    currentChannel = Integer.parseInt((channelCollection.entrySet().iterator().next()).getKey());
-                    return  channelCollection.get(String.valueOf(currentChannel));
+                Iterator i = channelCollection.entrySet().iterator();
+                while (i.hasNext()) {
+                    Map.Entry entry = (Map.Entry) i.next();
+                    if(entry.getKey().equals(keyCurrentChannel)){
+                        if(i.hasNext()){ //we're at our current channel must get the next channel
+                            keyCurrentChannel = (String) ((Map.Entry) i.next()).getKey();
+                            return channelCollection.get(keyCurrentChannel);
+                        } else { //there is no next must start from the beginning
+                            keyCurrentChannel = ((channelCollection.entrySet().iterator().next()).getKey());
+                            return channelCollection.get(keyCurrentChannel);
+                        }
+                    }
                 }
+                return "ERROR cannot go up a channel";
             } else {
                 //if trying to access channels that do not exist let user know
                 return "ERROR channels have not been established yet.";
