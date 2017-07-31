@@ -100,6 +100,7 @@ import java.util.*;
                             return channelCollection.get(String.valueOf(currentChannel));
                         }
                     }
+                    return "Couldn't find channel";
                 } else { //current channel is the largest value
                     //revert back to beginning of channels list
                     currentChannel = smallestValue;
@@ -110,6 +111,35 @@ import java.util.*;
                 return "ERROR channels have not been established yet.";
             }
         }
+
+
+        /**
+         * Changes the Television channel once in a descending direction.
+         *
+         * @return
+        The name of the previous channel
+         */
+        public String channelDown() {
+            if (channelCollection != null){
+                if(currentChannel > smallestValue){
+                    for(int i=currentChannel - 1; i>=smallestValue; i--){
+                        if(channelCollection.containsKey(String.valueOf(i))){
+                            currentChannel = i;
+                            return channelCollection.get(String.valueOf(currentChannel));
+                        }
+                    }
+                    return "Couldn't find channel";
+                } else { //current channel is the largest value
+                    //revert to end of channels list
+                    currentChannel = largetsValue;
+                    return channelCollection.get(String.valueOf(currentChannel));
+                }
+            } else {
+                //if trying to access channels that do not exist let user know
+                return "ERROR channels have not been established yet.";
+            }
+        }
+
         private void setSmallestValueForChannel(){
             Iterator i = channelCollection.entrySet().iterator();
             int smallest = 0; int compareTo = 0;
@@ -132,39 +162,6 @@ import java.util.*;
             }
             largetsValue = largest;
         }
-        /**
-         * Changes the Television channel once in a descending direction.
-         *
-         * @return
-        The name of the previous channel
-         */
-        public String channelDown() {
-            if (channelCollection != null){
-                int current = Integer.parseInt(keyCurrentChannel);
-
-
-                List<Map.Entry<String,String>> channelList = new ArrayList<>(channelCollection.entrySet());
-
-                for( int i = channelList.size() -1; i >= 0 ; i --){
-                    Map.Entry<String,String> entry = channelList.get(i);
-                    if(entry.getKey().equals(keyCurrentChannel)){
-                        if(i - 1 >=0){ //at current key need to get the one previous
-                            keyCurrentChannel = (channelList.get(i-1)).getKey();
-                            return channelCollection.get(keyCurrentChannel);
-                        } else { //there is no previous revert to end of channel list
-                            keyCurrentChannel = (channelList.get(channelList.size() - 1)).getKey();
-                            return channelCollection.get(keyCurrentChannel);
-                        }
-                    }
-                }
-                return "ERROR cannot go down a channel";
-            } else {
-                //if trying to access channels that do not exist let user know
-                return "ERROR channels have not been established yet.";
-            }
-        }
-
-
         /**
          * Prints the current channel name to the console.
          */
