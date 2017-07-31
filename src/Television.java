@@ -1,6 +1,4 @@
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  *  @author Bryce Hairabedian
@@ -118,19 +116,24 @@ import java.util.Map;
         The name of the previous channel
          */
         public String channelDown() {
-            if (channelCollection != null) {
-                //if we subtract one from the current channel is it valid?
-                if (isValidChannel(String.valueOf(currentChannel - 1))) {
-                    //the channelNumber is valid and can be looked up
-                    //subtract one from it and lookup
-                    return channelCollection.get(String.valueOf(--currentChannel));
-                } else {
-                    //if we subtract one from the current channel it will go below the range of channels
-                    //set currentChannel to the end of the list
-                    currentChannel = channelCollection.size();
-                    return channelCollection.get(String.valueOf(currentChannel));
+            if (channelCollection != null){
+                List<Map.Entry<String,String>> channelList = new ArrayList<>(channelCollection.entrySet());
+
+                for( int i = channelList.size() -1; i >= 0 ; i --){
+                    Map.Entry<String,String> entry = channelList.get(i);
+                    if(entry.getKey().equals(keyCurrentChannel)){
+                        if(i - 1 >=0){ //at current key need to get the one previous
+                            keyCurrentChannel = (channelList.get(i-1)).getKey();
+                            return channelCollection.get(keyCurrentChannel);
+                        } else { //there is no previous revert to end of channel list
+                            keyCurrentChannel = (channelList.get(channelList.size() - 1)).getKey();
+                            return channelCollection.get(keyCurrentChannel);
+                        }
+                    }
                 }
+                return "ERROR cannot go down a channel";
             } else {
+                //if trying to access channels that do not exist let user know
                 return "ERROR channels have not been established yet.";
             }
         }
@@ -169,7 +172,7 @@ import java.util.Map;
          */
         public void printCurrentChannel(){
             if(channelCollection != null){
-                System.out.println("Channel: "+channelCollection.get(String.valueOf(currentChannel)));
+                System.out.println("Channel: "+channelCollection.get(keyCurrentChannel));
             }
         }
 
