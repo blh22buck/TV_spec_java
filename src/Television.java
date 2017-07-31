@@ -125,7 +125,7 @@ import java.util.*;
                         }
                     }
                     return "Couldn't find channel";
-                } else { //current channel is the largest value
+                } else { //current channel is the smallest value
                     //revert to end of channels list
                     currentChannel = largestValue;
                     return channelCollection.get(String.valueOf(currentChannel));
