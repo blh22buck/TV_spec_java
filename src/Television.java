@@ -21,7 +21,7 @@ import java.util.*;
  *
  * Question:
  * Is your solution optimal? If so, why? Yes,
- *      -> My solution checks for all edge cases. Below zero, out of range, or a non numeric value.
+ *      -> My solution checks for all edge cases.
  *      The HashMap provides average case of O(1) lookups with all .get() and .put()'s.
  *      It also keeps track internally what channel is currently being tuned in with currentChannel.
  *      The Channel number is validated for range and numeric value before being looked-up.
@@ -32,11 +32,10 @@ import java.util.*;
      * Class to Model a Television.
      */
     public class Television {
-        private LinkedHashMap<String, String> channelCollection;
-        private String keyCurrentChannel;
-        private int currentChannel;
-        private int largetsValue;
-        private int smallestValue;
+        private HashMap<String, String> channelCollection; //collection of each channel with key, value pair
+        private int currentChannel; //the current channel being tuned in
+        private int largestValue; //the largest value in the channel set
+        private int smallestValue; //the smallest value in the channel set
 
         /**
          * Constructor
@@ -52,15 +51,12 @@ import java.util.*;
             //if channel collection and channelNumberToNameMap passed is in not null
             if(channelCollection == null && channelNumberToNameMap != null) {
                 //create new HashMap from Map passed in
-                channelCollection = new LinkedHashMap<>(channelNumberToNameMap);
+                channelCollection = new HashMap<>(channelNumberToNameMap);
                 setLargestValueForChannel();
                 setSmallestValueForChannel();
                 currentChannel = smallestValue;
-
-                keyCurrentChannel = ((channelCollection.entrySet().iterator().next()).getKey());
-                //let user know which channel TV is going to begin with
-                System.out.print("Beginning with ");
-                printCurrentChannel();
+                // uncomment below if you'd like to let user know which channel TV is going to begin with
+                //System.out.print("Beginning with ");printCurrentChannel();
             } else {
                 //do nothing
                 //channelCollection has already been created
@@ -93,14 +89,14 @@ import java.util.*;
          */
         public String channelUp() {
             if (channelCollection != null){
-                if(currentChannel < largetsValue){
-                    for(int i=currentChannel+1; i<=largetsValue; i++){
+                if(currentChannel < largestValue){
+                    for(int i = currentChannel+1; i<= largestValue; i++){
                         if(channelCollection.containsKey(String.valueOf(i))){
                             currentChannel = i;
                             return channelCollection.get(String.valueOf(currentChannel));
                         }
                     }
-                    return "Couldn't find channel";
+                    return "ERROR Couldn't find channel";
                 } else { //current channel is the largest value
                     //revert back to beginning of channels list
                     currentChannel = smallestValue;
@@ -131,7 +127,7 @@ import java.util.*;
                     return "Couldn't find channel";
                 } else { //current channel is the largest value
                     //revert to end of channels list
-                    currentChannel = largetsValue;
+                    currentChannel = largestValue;
                     return channelCollection.get(String.valueOf(currentChannel));
                 }
             } else {
@@ -140,9 +136,12 @@ import java.util.*;
             }
         }
 
+        /**
+         * Sets the smallest value for a TV channel.
+         */
         private void setSmallestValueForChannel(){
             Iterator i = channelCollection.entrySet().iterator();
-            int smallest = 0; int compareTo = 0;
+            int smallest = Integer.MAX_VALUE; int compareTo = 0;
             while (i.hasNext()){
                 compareTo = Integer.parseInt((String) ((Map.Entry) i.next()).getKey());
                 if(compareTo < smallest){
@@ -151,6 +150,10 @@ import java.util.*;
             }
             smallestValue = smallest;
         }
+
+        /**
+         * Sets the largest value for a TV channel.
+         */
         private void setLargestValueForChannel(){
             Iterator i = channelCollection.entrySet().iterator();
             int largest = 0; int compareTo = 0;
@@ -160,14 +163,15 @@ import java.util.*;
                     largest = compareTo;
                 }
             }
-            largetsValue = largest;
+            largestValue = largest;
         }
+
         /**
          * Prints the current channel name to the console.
          */
         public void printCurrentChannel(){
             if(channelCollection != null){
-                System.out.println("Channel: "+channelCollection.get(keyCurrentChannel));
+                System.out.println("Channel: "+channelCollection.get(String.valueOf(currentChannel)));
             }
         }
 

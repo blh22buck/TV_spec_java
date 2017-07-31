@@ -16,15 +16,15 @@ public class Main_Runner {
         temp.put("70", "i");
         temp.put("46", "e");
         temp.put("1", "a");
-        temp.put("3", "b");
-        temp.put("44", "c");
+        temp.put("2", "b");
+        temp.put("3", "c");
         temp.put("45", "d");
         temp.put("57", "g");
 
 
         Television tv = new Television(temp);
 
-        System.out.println("go to channel 5 "+tv.goToChannel("5"));
+        System.out.println("go to channel 45 "+tv.goToChannel("45"));
         System.out.println("channel up= " + tv.channelUp());
         System.out.println("channel up= " + tv.channelUp());
         System.out.println("channel up= " + tv.channelUp());
