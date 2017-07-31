@@ -54,8 +54,8 @@ import java.util.Map;
                 //set default channel to 1
                 currentChannel = 1;
                 //let user know which channel TV is going to begin with
-                System.out.print("Beginning with ");
-                printCurrentChannel();
+                //System.out.print("Beginning with ");
+                //printCurrentChannel();
             } else {
                 //do nothing
                 //channelCollection has already been created

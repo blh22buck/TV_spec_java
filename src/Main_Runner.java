@@ -53,6 +53,8 @@ public class Main_Runner {
         System.out.println("channel down= " + tv.channelDown());
         System.out.println("channel down= " + tv.channelDown());
         System.out.println("channel up= " + tv.channelUp());
+
     }
+
 
 }
