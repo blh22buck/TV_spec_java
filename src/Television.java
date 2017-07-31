@@ -16,6 +16,7 @@ import java.util.Map;
  * 2. Feel free to add any additional private member methods/variables/classes.
  * 3. Please capture any assumptions that you make about the program.
  *      Assumption -> The channels and numbers cannot be changed once created
+ *      Assumption -> Channels will be consecutive
  *
  * 4. We want to see your best work - style, problem solving, etc. Your solution should handle every edge case you can
  *    think of.
